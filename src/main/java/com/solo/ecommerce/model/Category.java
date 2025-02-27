@@ -24,7 +24,5 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products;
 
-    public Category(@NotBlank(message = "Nama category tidak boleh kosong!") String name) {
-        this.name = name;
-    }
+
 }
