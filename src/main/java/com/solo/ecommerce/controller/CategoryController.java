@@ -26,4 +26,5 @@ public class CategoryController {
         CategoryResponse response = categoryService.updateCategory(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 }

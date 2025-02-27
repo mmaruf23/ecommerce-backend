@@ -2,7 +2,6 @@ package com.solo.ecommerce.service;
 
 import com.solo.ecommerce.dto.request.CategoryRequest;
 import com.solo.ecommerce.dto.response.CategoryResponse;
-import com.solo.ecommerce.exception.DataNotFoundException;
 import com.solo.ecommerce.exception.DuplicateDataException;
 import com.solo.ecommerce.model.Category;
 import com.solo.ecommerce.repository.CategoryRepository;

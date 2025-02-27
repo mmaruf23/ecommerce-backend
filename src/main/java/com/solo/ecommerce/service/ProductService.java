@@ -8,9 +8,9 @@ import com.solo.ecommerce.model.Category;
 import com.solo.ecommerce.model.Product;
 import com.solo.ecommerce.repository.CategoryRepository;
 import com.solo.ecommerce.repository.ProductRepository;
+import com.solo.ecommerce.util.ConvertToResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +47,7 @@ public class ProductService {
         product.setStock(request.getStock());
 
         Product savedProduct = productRepository.save(product);
-        return convertToResponse(savedProduct);
+        return ConvertToResponse.productToResponse(savedProduct);
     }
 
     @Transactional
@@ -65,7 +65,7 @@ public class ProductService {
         if (request.getStock() != null) product.setStock(request.getStock());
 
         Product savedProduct = productRepository.save(product);
-        return convertToResponse(savedProduct);
+        return ConvertToResponse.productToResponse(savedProduct);
     }
 
     @Transactional
@@ -78,22 +78,10 @@ public class ProductService {
 
     public Page<ProductResponse> findAllProduct(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products =productRepository.findAll(pageable);
-        return products.map(this::convertToResponse);
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(ConvertToResponse::productToResponse);
     }
 
-    private ProductResponse convertToResponse(Product product) {
-        ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setDescription(product.getDescription());
-        response.setCategoryId(product.getCategory().getId());
-        response.setCategoryName(product.getCategory().getName());
-        response.setPrice(product.getPrice());
-        response.setImage(product.getImage());
-        response.setStock(product.getStock());
-        return response;
-    }
 
     public String saveImage(MultipartFile file) throws IOException {
         if (file.isEmpty()) {

@@ -37,7 +37,7 @@ public class ProductController {
     }
 
     @PutMapping(value = "/edit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @ModelAttribute UpdateProductRequest request) throws IOException {
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @ModelAttribute @Valid UpdateProductRequest request) throws IOException {
         ProductResponse response = productService.editProduct(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

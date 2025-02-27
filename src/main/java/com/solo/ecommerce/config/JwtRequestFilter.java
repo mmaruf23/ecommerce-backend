@@ -1,6 +1,6 @@
 package com.solo.ecommerce.config;
 
-import com.solo.ecommerce.service.UserService;
+import com.solo.ecommerce.service.AuthService;
 import com.solo.ecommerce.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,11 +26,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @Autowired
-    public JwtRequestFilter(@Lazy UserService userService) {
-        this.userService = userService;
+    public JwtRequestFilter(@Lazy AuthService authService) {
+        this.authService = authService;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userService.loadUserByUsername(username);
+            UserDetails userDetails = this.authService.loadUserByUsername(username);
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

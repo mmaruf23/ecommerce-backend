@@ -1,8 +1,7 @@
 package com.solo.ecommerce.config;
 
 import com.solo.ecommerce.model.Role;
-import com.solo.ecommerce.service.UserService;
-import lombok.RequiredArgsConstructor;
+import com.solo.ecommerce.service.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,12 +25,12 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final UserService userService;
+    private final AuthService authService;
 
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserService userService) {
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, AuthService authService) {
         this.jwtRequestFilter = jwtRequestFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.userService = userService;
+        this.authService = authService;
     }
 
     @Bean
@@ -49,6 +48,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
+                        .requestMatchers("/api/users/delete").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/api/users/role/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/api/users/all").hasRole(Role.ADMIN.name())
                         .requestMatchers("/api/category/add").hasRole(Role.ADMIN.name())
                         .requestMatchers("/api/category/edit").hasRole(Role.ADMIN.name())
                         .requestMatchers("/api/products/add").hasRole(Role.ADMIN.name())
@@ -75,7 +77,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailService() {
-        return userService::loadUserByUsername;
+        return authService::loadUserByUsername;
 
     }
 
