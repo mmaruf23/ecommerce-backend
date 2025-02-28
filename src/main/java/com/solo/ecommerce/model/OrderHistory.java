@@ -17,7 +17,7 @@ public class OrderHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "status",nullable = false)
-    private String status;
+    private Status status;
 
     @Column(name = "change_at", nullable = false)
     private LocalDateTime changeAt;

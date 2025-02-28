@@ -98,4 +98,16 @@ public class ProductService {
         return customFileName;
     }
 
+    public List<Product> findAvailableProduct() {
+        return productRepository.findByStockGreaterThan(0);
+    }
+
+    public List<Product> findOutOfStockProduct() {
+        return productRepository.findByStockLessThanEqual(0);
+    }
+
+    public Product findByName(String name) {
+
+    }
+
 }

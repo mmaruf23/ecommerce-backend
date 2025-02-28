@@ -2,9 +2,7 @@ package com.solo.ecommerce.service;
 
 import com.solo.ecommerce.exception.DataNotFoundException;
 import com.solo.ecommerce.model.*;
-import com.solo.ecommerce.repository.CartItemsRepository;
-import com.solo.ecommerce.repository.CartRepository;
-import com.solo.ecommerce.repository.OrderRepository;
+import com.solo.ecommerce.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +19,10 @@ public class CartService {
     private CartItemsRepository cartItemsRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     public Cart createCart(User user) {
         Cart cart = new Cart();
@@ -28,8 +30,9 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public void addProductToCart(User user, Product product, int quantity) {
+    public void addProductToCart(User user, Long productId, int quantity) {
         Cart cart = cartRepository.findByUser(user).orElseGet(() -> createCart(user));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new DataNotFoundException("Product not found"));
 
         cart.getCartItems().stream()
                 .filter(item -> item.getProduct().equals(product))
@@ -49,7 +52,8 @@ public class CartService {
 
     }
 
-    public void updateProductCart(User user, Product product, int quantity) {
+    public void updateProductCart(User user, Long productIs, int quantity) {
+        Product product = productRepository.findById(productIs).orElseThrow(() -> new DataNotFoundException("Product not found"));
         Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new DataNotFoundException("Cart not found for user"));
         cart.getCartItems()
                 .stream()
@@ -65,8 +69,9 @@ public class CartService {
                 });
     }
 
-    public void deleteProductCart(User user ,Product product) {
+    public void deleteProductCart(User user, Long productId) {
         Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new DataNotFoundException("Cart not found for user"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new DataNotFoundException("Product not found"));
         if (cart.getCartItems().removeIf(item -> item.getProduct().equals(product))){
             cartRepository.save(cart);
         } else  {
@@ -74,36 +79,7 @@ public class CartService {
         }
     }
 
-    public Order checkoutCart(User user) {
-        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new DataNotFoundException("Cart not found for user"));
-        if (cart.getCartItems().isEmpty()) {
-            throw new DataNotFoundException("Cart is empty, cannot checkout");
-        }
 
-        Order order = new Order();
-        order.setUser(user);
-        order.setTotalPrice(cart.getCartItems().stream()
-                .mapToDouble(item -> item.getProduct().getPrice() * item.getQty()).sum());
-        order.setStatus(Status.PROCESS);
-        order = orderRepository.save(order);
-
-        // Buat orderItems setelah order tersimpan
-        List<OrderItems> orderItems = new ArrayList<>();
-        for (CartItems item : cart.getCartItems()) {
-            OrderItems orderItem = new OrderItems();
-            orderItem.setOrder(order);
-            orderItem.setProduct(item.getProduct());
-            orderItem.setQty(item.getQty());
-            orderItems.add(orderItem);
-        }
-
-        order.setOrderItems(orderItems);
-        order = orderRepository.save(order);
-        cart.getCartItems().clear();
-        cartRepository.save(cart);
-
-        return order;
-    }
 
 
 

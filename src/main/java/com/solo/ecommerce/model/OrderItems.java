@@ -16,7 +16,13 @@ public class OrderItems {
     private Long id;
 
     @Column(name = "qty")
-    private int qty;
+    private Integer qty;
+
+    @Column(name = "product_name")
+    private String productName;
+
+    @Column(name = "product_name")
+    private Double productPrice;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
