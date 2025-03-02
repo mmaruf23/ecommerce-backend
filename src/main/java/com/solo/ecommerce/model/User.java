@@ -1,6 +1,7 @@
 package com.solo.ecommerce.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,6 +42,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Order> order;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

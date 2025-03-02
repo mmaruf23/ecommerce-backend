@@ -29,7 +29,7 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order")
-    private List<OrderItems> orderItems;
+    private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "order")
     private List<OrderHistory> orderHistories;

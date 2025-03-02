@@ -1,9 +1,16 @@
 package com.solo.ecommerce.util;
 
+import com.solo.ecommerce.dto.response.CartResponse;
+import com.solo.ecommerce.dto.response.OrderResponse;
 import com.solo.ecommerce.dto.response.ProductResponse;
 import com.solo.ecommerce.dto.response.UserResponse;
+import com.solo.ecommerce.model.Cart;
+import com.solo.ecommerce.model.Order;
 import com.solo.ecommerce.model.Product;
 import com.solo.ecommerce.model.User;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConvertToResponse {
 
@@ -31,4 +38,40 @@ public class ConvertToResponse {
         response.setUpdatedAt(user.getUpdatedAt());
         return response;
     }
+
+    public static OrderResponse orderToResponse(Order order) {
+        OrderResponse response = new OrderResponse();
+        response.setId(order.getId());
+        response.setStatus(order.getStatus().name());
+        response.setTotalPrice(order.getTotalPrice());
+
+        List<OrderResponse.OrderItemResponse> itemResponses = order.getOrderItems().stream()
+                .map(item -> {
+                    OrderResponse.OrderItemResponse itemResponse = new OrderResponse.OrderItemResponse();
+                    itemResponse.setProductName(item.getProductName());
+                    itemResponse.setProductPrice(item.getProductPrice());
+                    itemResponse.setQuantity(item.getQty());
+                    return itemResponse;
+                })
+                .toList();
+
+        response.setOrderItems(itemResponses);
+        return response;
+    }
+
+    public static CartResponse cartToResponse(Cart cart) {
+        List<CartResponse.CartItemResponse> itemResponses = cart.getCartItems().stream()
+                .map(item -> new CartResponse.CartItemResponse(
+                        item.getId(),
+                        item.getProduct().getId(),
+                        item.getProduct().getName(),
+                        item.getProduct().getPrice(),
+                        item.getQty()
+                ))
+                .collect(Collectors.toList()); // Convert CartItem to CartItemResponse
+
+
+        return new CartResponse(cart.getId(), itemResponses);
+    }
+
 }

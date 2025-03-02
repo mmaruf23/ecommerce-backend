@@ -3,10 +3,13 @@ package com.solo.ecommerce.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * Request for login
+ */
 @Data
 public class LoginRequest {
-    @NotBlank(message = "Username ti dak bi leh ko song!")
+    @NotBlank(message = "Username cannot blank")
     private String username;
-    @NotBlank(message = "Password ti dak bo leh ko song")
+    @NotBlank(message = "Password cannot blank")
     private String password;
 }

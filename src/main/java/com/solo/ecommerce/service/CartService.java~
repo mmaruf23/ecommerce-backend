@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CartService {
@@ -40,7 +43,7 @@ public class CartService {
                 .ifPresentOrElse(
                         cartItem -> cartItem.setQty(cartItem.getQty() + quantity),
                         () -> {
-                            CartItem newItem = new CartItem();
+                            CartItems newItem = new CartItems();
                             newItem.setCart(cart);
                             newItem.setProduct(product);
                             newItem.setQty(quantity);

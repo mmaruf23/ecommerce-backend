@@ -31,7 +31,8 @@ public class CategoryService {
             throw new DuplicateDataException("Category su dah ada!");
         }
 
-        Category category = new Category(request.getName());
+        Category category = new Category();
+        category.setName(request.getName());
         Category savedCategory = categoryRepository.save(category);
         return convertToResponse(savedCategory);
 

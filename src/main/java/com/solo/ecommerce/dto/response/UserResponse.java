@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Response for user request
+ * register , update detail user, etc
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

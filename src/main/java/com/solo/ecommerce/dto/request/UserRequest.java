@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class UserRequest {
-    @NotBlank(message = "Username cannot ku ha ku!")
+    @NotBlank(message = "Username is required!")
     @Size(min = 4, max = 20)
     private String username;
 
@@ -15,11 +15,11 @@ public class UserRequest {
     @Email
     private String email;
 
-    @NotBlank(message = "Password cannot ku ha ku")
+    @NotBlank(message = "Password cannot blank")
     @Size(min = 8, max = 20)
     private String password;
 
-    @NotBlank(message = "Kimi no na wa ?")
+    @NotBlank(message = "Name is Required")
     @Size(min = 2, max = 20)
     private String name;
 }

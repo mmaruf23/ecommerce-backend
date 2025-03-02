@@ -30,7 +30,7 @@ public class Product {
     private Category category;
 
     @OneToMany(mappedBy = "product")
-    private List<OrderItems> orderItems;
+    private List<OrderItem> orderItems;
     @OneToMany(mappedBy = "product")
-    private List<CartItems> cartItems;
+    private List<CartItem> cartItems;
 }

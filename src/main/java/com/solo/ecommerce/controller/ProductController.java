@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/products")
@@ -29,7 +30,7 @@ public class ProductController {
     public ResponseEntity<ProductResponse> create(@ModelAttribute @Valid ProductRequest request, BindingResult result) throws IOException {
 
         if (result.hasErrors()) {
-            throw new ValidationException("Validasi gagal : + " + result.getFieldError().getDefaultMessage());
+            throw new ValidationException("Validasi gagal : + " + Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
 
         ProductResponse response = productService.addProduct(request);
@@ -55,4 +56,11 @@ public class ProductController {
         Page<ProductResponse> responses = productService.findAllProduct(page, size);
         return ResponseEntity.status(HttpStatus.OK).body(new PaginatedResponse<>(HttpStatus.OK.value(), responses));
     }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<?> productByCategory(@PathVariable Long id, @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size) {
+        Page<ProductResponse> responses = productService.findProductsByCategory(id, page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(new PaginatedResponse<>(HttpStatus.OK.value(), responses));
+    }
+
 }

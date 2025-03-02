@@ -6,6 +6,7 @@ import com.solo.ecommerce.model.*;
 import com.solo.ecommerce.repository.*;
 import com.solo.ecommerce.util.ConvertToResponse;
 import jakarta.transaction.Transactional;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
@@ -45,11 +46,11 @@ public class OrderService {
         order = orderRepository.save(order);
 
 
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (CartItem item : cart.getCartItems()) {
+        List<OrderItems> orderItems = new ArrayList<>();
+        for (CartItems item : cart.getCartItems()) {
             if (item.getProduct().getStock() < item.getQty()) throw new DataIntegrityViolationException("Stok tidak cukup!");
 
-            OrderItem orderItem = new OrderItem();
+            OrderItems orderItem = new OrderItems();
             orderItem.setOrder(order);
             orderItem.setProduct(item.getProduct());
             orderItem.setProductName(item.getProduct().getName());
@@ -59,7 +60,7 @@ public class OrderService {
         }
 
 
-        for (OrderItem orderItem : orderItems) {
+        for (OrderItems orderItem : orderItems) {
             Product product = orderItem.getProduct();
             product.setStock(product.getStock() - orderItem.getQty());
             productRepository.save(product);

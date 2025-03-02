@@ -1,14 +1,17 @@
 package com.solo.ecommerce.dto.request;
 
 import com.solo.ecommerce.model.Status;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+/**
+ * Request for update order status
+ */
 @Data
 public class OrderStatusRequest {
 
-    @NotBlank(message = "Order id tidak boleh kosong")
+    @NotNull(message = "Order id tidak boleh kosong")
     private Long orderId;
-    @NotBlank(message = "Status harus diisi")
+    @NotNull(message = "Status harus diisi")
     private Status status;
 }

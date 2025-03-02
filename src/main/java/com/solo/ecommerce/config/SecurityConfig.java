@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowCredentials(true);
-                    corsConfiguration.setAllowedOrigins(List.of("*")); // Ubah sesuai domain frontend
+                    corsConfiguration.setAllowedOrigins(List.of("*"));
                     corsConfiguration.addAllowedHeader("*");
                     corsConfiguration.addAllowedMethod("*");
                     return corsConfiguration;
@@ -57,11 +57,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/products/edit").hasRole(Role.ADMIN.name())
                         .requestMatchers("/api/products/delete").hasRole(Role.ADMIN.name())
                         .requestMatchers("/api/products/all").hasRole(Role.ADMIN.name())
+
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider) // Tambahkan ini
+                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -70,16 +71,16 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailService());
+        daoAuthenticationProvider.setUserDetailsService(authService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }
 
-    @Bean
-    public UserDetailsService userDetailService() {
-        return authService::loadUserByUsername;
-
-    }
+//    @Bean
+//    public UserDetailsService userDetailService() {
+//        return authService::loadUserByUsername;
+//
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -9,6 +9,7 @@ import com.solo.ecommerce.model.Product;
 import com.solo.ecommerce.repository.CategoryRepository;
 import com.solo.ecommerce.repository.ProductRepository;
 import com.solo.ecommerce.util.ConvertToResponse;
+import com.solo.ecommerce.util.SlugConverter;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -98,16 +99,25 @@ public class ProductService {
         return customFileName;
     }
 
-    public List<Product> findAvailableProduct() {
-        return productRepository.findByStockGreaterThan(0);
+    public List<ProductResponse> findAvailableProduct() {
+        List<Product> products =  productRepository.findByStockGreaterThan(0);
+        return products.stream().map(ConvertToResponse::productToResponse).toList();
     }
 
-    public List<Product> findOutOfStockProduct() {
-        return productRepository.findByStockLessThanEqual(0);
+    public List<ProductResponse> findOutOfStockProduct() {
+        List<Product> products = productRepository.findByStockLessThanEqual(0);
+        return products.stream().map(ConvertToResponse::productToResponse).toList();
     }
 
-    public Product findByName(String name) {
-
+    public Product findByName(String slug) {
+        String name = SlugConverter.convertToTitle(slug);
+        return productRepository.findByName(name);
     }
 
+    public Page<ProductResponse> findProductsByCategory(Long id, int page, int size) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Category not found"));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productRepository.findByCategory(category, pageable);
+        return products.map(ConvertToResponse::productToResponse);
+    }
 }

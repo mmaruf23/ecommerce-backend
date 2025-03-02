@@ -1,4 +1,0 @@
-package com.solo.ecommerce.repository;
-
-public interface ProductRepository {
-}
