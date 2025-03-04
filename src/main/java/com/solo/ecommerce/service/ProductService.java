@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,7 +84,6 @@ public class ProductService {
         return products.map(ConvertToResponse::productToResponse);
     }
 
-
     public String saveImage(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("Image tidak boleh kosong");
@@ -97,6 +97,14 @@ public class ProductService {
         Files.copy(file.getInputStream(), path);
 
         return customFileName;
+    }
+
+    public byte[] getImage(String filename) throws IOException {
+        Path path = Paths.get(imageDir + filename);
+        if (!Files.exists(path)){
+            throw new DataNotFoundException("File tidak ditemukan!");
+        }
+        return Files.readAllBytes(path);
     }
 
     public List<ProductResponse> findAvailableProduct() {

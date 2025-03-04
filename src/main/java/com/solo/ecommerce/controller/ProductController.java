@@ -18,6 +18,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 @RestController
@@ -61,6 +64,21 @@ public class ProductController {
     public ResponseEntity<?> productByCategory(@PathVariable Long id, @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size) {
         Page<ProductResponse> responses = productService.findProductsByCategory(id, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(new PaginatedResponse<>(HttpStatus.OK.value(), responses));
+    }
+
+    @GetMapping(value = "/images/{filename}")
+    public ResponseEntity<?> getImage(@PathVariable String filename) throws IOException {
+
+        byte[] image = productService.getImage(filename);
+
+        String fileExtension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
+        MediaType mediaType = switch (fileExtension) {
+            case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
+            case "png" -> MediaType.IMAGE_PNG;
+            default -> MediaType.APPLICATION_OCTET_STREAM; // nilai default -> data byte
+        };
+
+        return ResponseEntity.status(HttpStatus.OK).contentType(mediaType).body(image);
     }
 
 }
