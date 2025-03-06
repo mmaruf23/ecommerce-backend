@@ -21,6 +21,7 @@ public class Order {
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
 

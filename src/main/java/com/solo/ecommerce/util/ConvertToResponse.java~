@@ -37,7 +37,7 @@ public class ConvertToResponse {
         OrderResponse response = new OrderResponse();
         response.setId(order.getId());
         response.setStatus(order.getStatus().name());
-        if (order.getUser() != null) response.setUsername(order.getUser().getUsername());
+        response.setUsername(order.getUser().getUsername());
         response.setTotalPrice(order.getTotalPrice());
 
         List<OrderResponse.OrderItemResponse> itemResponses = order.getOrderItems().stream()

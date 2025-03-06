@@ -63,7 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/products/add").hasRole(Role.ADMIN.name())
                         .requestMatchers("/api/products/edit").hasRole(Role.ADMIN.name())
                         .requestMatchers("/api/products/delete").hasRole(Role.ADMIN.name())
-                        .requestMatchers("/api/dashboard/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/api/dashboard/**").permitAll()
 
                         .anyRequest().authenticated()
                 )

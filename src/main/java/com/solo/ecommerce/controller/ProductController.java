@@ -33,7 +33,7 @@ public class ProductController {
     public ResponseEntity<ProductResponse> create(@ModelAttribute @Valid ProductRequest request, BindingResult result) throws IOException {
 
         if (result.hasErrors()) {
-            throw new ValidationException("Validasi gagal : + " + Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
+            throw new ValidationException("Validasi gagal : " + Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
 
         ProductResponse response = productService.addProduct(request);
@@ -80,5 +80,21 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.OK).contentType(mediaType).body(image);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchProduct(@RequestParam String keyword) {
+        return ResponseEntity.ok(productService.searchProduct(keyword));
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<?> findProduct(@PathVariable String slug) {
+        return ResponseEntity.ok(productService.findByName(slug));
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> findProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findById(id));
+    }
+
 
 }

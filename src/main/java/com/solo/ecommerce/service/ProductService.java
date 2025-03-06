@@ -117,9 +117,10 @@ public class ProductService {
         return products.stream().map(ConvertToResponse::productToResponse).toList();
     }
 
-    public Product findByName(String slug) {
+    public ProductResponse findByName(String slug) {
         String name = SlugConverter.convertToTitle(slug);
-        return productRepository.findByName(name);
+        Product product = productRepository.findFirstByNameIgnoreCase(name);
+        return ConvertToResponse.productToResponse(product);
     }
 
     public Page<ProductResponse> findProductsByCategory(Long id, int page, int size) {
@@ -127,5 +128,15 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> products = productRepository.findByCategory(category, pageable);
         return products.map(ConvertToResponse::productToResponse);
+    }
+
+    public List<ProductResponse> searchProduct(String keyword) {
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(keyword);
+        return products.stream().map(ConvertToResponse::productToResponse).toList();
+    }
+
+    public ProductResponse findById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Product not found"));
+        return ConvertToResponse.productToResponse(product);
     }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public class OrderResponse {
     private Long id;
     private String status;
+    private String username;
     private Double totalPrice;
     private List<OrderItemResponse> orderItems;
 

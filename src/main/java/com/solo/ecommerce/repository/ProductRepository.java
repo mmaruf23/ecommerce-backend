@@ -13,6 +13,8 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByStockGreaterThan(int stock);
     List<Product> findByStockLessThanEqual(int stock);
-    Product findByName(String name);
+    Product findFirstByNameIgnoreCase(String name);
     Page<Product> findByCategory(Category category, Pageable pageable);
+
+    List<Product> findByNameContainingIgnoreCase(String keyword);
 }

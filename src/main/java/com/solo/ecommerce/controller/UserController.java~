@@ -61,9 +61,5 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @GetMapping("/role/{role}")
-    public ResponseEntity<?> userByRole(@PathVariable Role role, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<UserResponse> users = userService.findAllUser(role, page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(users);
-    }
+
 }
